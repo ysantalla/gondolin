@@ -16,6 +16,7 @@ export class AuthService {
   private tokenGetter: string = null;
   private _isAuthenticated = new BehaviorSubject(false);
   private _firstname = new BehaviorSubject('');
+  private _token = new BehaviorSubject('');
   private _roles = new BehaviorSubject([]);
 
   private _isAdmin = new BehaviorSubject(false);
@@ -27,11 +28,12 @@ export class AuthService {
     this.tokenGetter =  this.localStorageService.getItem(TOKEN_PREFIX);
     if (this.isLoggedIn()) {
       const token: Token = this.decodeToken(this.tokenGetter);
+      this._token.next(this.tokenGetter);
       this._firstname.next(token.user.firstname);
       this._roles.next(token.user.roles);
       this._isAuthenticated.next(true);
     } else {
-      this.tokenGetter = null;
+      this._token.next('');
       this._isAuthenticated.next(false);
       this._roles.next([]);
     }
@@ -52,6 +54,10 @@ export class AuthService {
 
   public getFirstname(): Observable<string> {
     return this._firstname.asObservable();
+  }
+
+  public getTokenn(): Observable<string> {
+    return this._token.asObservable();
   }
 
   public isAuthenticated(): Observable<boolean> {

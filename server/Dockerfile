@@ -5,4 +5,4 @@ WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server.js"]

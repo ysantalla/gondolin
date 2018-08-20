@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>No</button>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-    <button mat-button [mat-dialog-close]="true">Si</button>
+    <button mat-button [mat-dialog-close]="true">Sí</button>
   </mat-dialog-actions>
   `,
   styles: []

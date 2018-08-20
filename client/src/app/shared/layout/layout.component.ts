@@ -36,6 +36,11 @@ import { environment as env } from '@env/environment';
             <mat-icon aria-label="roles">supervisor_account</mat-icon>
             <span>Gestión de Roles</span>
           </a>
+          <a class="menu" *ngIf="(isAdmin | async)"
+                mat-list-item routerLink="/admin/file" routerLinkActive="active">
+            <mat-icon aria-label="files">folder</mat-icon>
+            <span>Gestión de Archivos</span>
+          </a>
         </mat-nav-list>
       </mat-sidenav>
       <mat-sidenav-content>
@@ -70,7 +75,7 @@ import { environment as env } from '@env/environment';
               <mat-divider *ngIf="isLoggedIn | async"></mat-divider>
 
               <button mat-menu-item *ngIf="isLoggedIn | async"  (click)="logout()">
-                <mat-icon>lock</mat-icon>
+                <mat-icon>exit_to_app</mat-icon>
                 <span>Cerrar Sesión</span>
               </button>
               <button mat-menu-item *ngIf="!(isLoggedIn | async)" routerLink="auth/signup">

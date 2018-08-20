@@ -143,7 +143,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private activedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private apollo: Apollo
   ) {}
@@ -158,7 +158,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
       repeat_password: [''],
     });
 
-    this.userId = this.activedRoute.snapshot.params['id'];
+    this.userId = this.activatedRoute.snapshot.params['id'];
 
     this.loading = true;
     this.updateUserForm.disable();

@@ -27,6 +27,7 @@ import { RoleGuard } from '@app/core/guard/role.guard';
   declarations: []
 })
 export class CoreModule {
+
   constructor(
     @Optional()
     @SkipSelf()
@@ -75,6 +76,8 @@ export class CoreModule {
         }
       }
     });
+
+    console.log("yasmany santalla pereda");
 
     const link = split(
       ({ query }) => {

@@ -19,36 +19,40 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Subscription } from 'rxjs';
 import { ConfirmComponent } from '@app/shared/confirm/confirm.component';
-import { Role } from '@app/core/model/user.model';
+import { File } from '@app/core/model/file.model';
 
-const roleList = gql`
-  query roles {
-    roles {
+import { environment as env } from '@env/environment';
+
+const fileList = gql`
+  query files {
+    files {
       id
-      name
-      description
+      filename
+      mimetype
+      path
+      encoding
     }
   }
 `;
 
-const deleteRole = gql`
-  mutation deleteRole($where: RoleWhereUniqueInput!) {
-    deleteRole(where: $where) {
-      name
+const deleteFile = gql`
+  mutation deleteFile($where: FileWhereUniqueInput!) {
+    deleteFile(where: $where) {
+      filename
     }
   }
 `;
 
-const deleteManyRoles = gql`
-  mutation deleteManyRoles($where: RoleWhereInput!) {
-    deleteManyRoles(where: $where) {
+const deleteManyFiles = gql`
+  mutation deleteManyFiles($where: FileWhereInput!) {
+    deleteManyFiles(where: $where) {
       count
     }
   }
 `;
 
 @Component({
-  selector: 'app-role-list',
+  selector: 'app-file-list',
   template: `
     <div class="container">
       <div class="loading">
@@ -66,9 +70,9 @@ const deleteManyRoles = gql`
 
       <div fxLayout="row" fxLayoutAlign="center center">
         <div class="item" fxFlex="98%">
-          <button class="create-button" mat-raised-button color="primary" routerLink="/admin/role/create" routerLinkActive="active">
+          <button class="create-button" mat-raised-button color="primary" routerLink="/admin/file/upload" routerLinkActive="active">
             <mat-icon>add</mat-icon>
-            <span>Rol</span>
+            <span>Archivo</span>
           </button>
         </div>
       </div>
@@ -84,7 +88,7 @@ const deleteManyRoles = gql`
 
               <mat-form-field class="full-width">
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrado por nombre y descripción">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrado por nombre, tipo y codificación">
               </mat-form-field>
 
               <mat-table #table [dataSource]="dataSource" matSort aria-label="Elements">
@@ -103,16 +107,34 @@ const deleteManyRoles = gql`
                   </mat-cell>
                 </ng-container>
 
-                <!-- Name Column -->
-                <ng-container matColumnDef="name">
+                <!-- Filename Column -->
+                <ng-container matColumnDef="filename">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
-                  <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
+                  <mat-cell *matCellDef="let row">{{row.filename}}</mat-cell>
                 </ng-container>
 
-                <!-- Description Column -->
-                <ng-container matColumnDef="description">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>descripción</mat-header-cell>
-                  <mat-cell *matCellDef="let row">{{row.description}}</mat-cell>
+                <!-- Mimetype Column -->
+                <ng-container matColumnDef="mimetype">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.mimetype}}</mat-cell>
+                </ng-container>
+
+                <!-- Encoding Column -->
+                <ng-container matColumnDef="encoding">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Codificación</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.encoding}}</mat-cell>
+                </ng-container>
+
+                <!-- Download Column -->
+                <ng-container matColumnDef="download">
+                  <mat-header-cell fxFlex="7" *matHeaderCellDef>
+                    <span>Descargar</span>
+                  </mat-header-cell>
+                  <mat-cell fxFlex="7" *matCellDef="let row">
+                    <a download mat-icon-button [href]="downloadLink+'/'+row.id" routerLinkActive="active">
+                      <mat-icon>file_download</mat-icon>
+                    </a>
+                  </mat-cell>
                 </ng-container>
 
                 <!-- Details Column -->
@@ -121,7 +143,7 @@ const deleteManyRoles = gql`
                     <span>Detalles</span>
                   </mat-header-cell>
                   <mat-cell fxFlex="7" *matCellDef="let row">
-                    <a mat-icon-button color="accent" [routerLink]="['/admin','role', 'details', row.id]" routerLinkActive="active">
+                    <a mat-icon-button color="accent" [routerLink]="['/admin','file', 'details', row.id]" routerLinkActive="active">
                       <mat-icon>visibility</mat-icon>
                     </a>
                   </mat-cell>
@@ -133,7 +155,7 @@ const deleteManyRoles = gql`
                     <span>Editar</span>
                   </mat-header-cell>
                   <mat-cell fxFlex="7" *matCellDef="let row">
-                    <a mat-icon-button color="primary" [routerLink]="['/admin','role', 'update', row.id]" routerLinkActive="active">
+                    <a mat-icon-button color="primary" [routerLink]="['/admin','file', 'change', row.id]" routerLinkActive="active">
                       <mat-icon>mode_edit</mat-icon>
                     </a>
                   </mat-cell>
@@ -186,15 +208,16 @@ const deleteManyRoles = gql`
 
   `]
 })
-export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
-  dataSource: MatTableDataSource<Role>;
-
-  selection = new SelectionModel<Role>(true, []);
+export class FileListComponent implements OnInit, AfterViewInit, OnDestroy {
+  dataSource: MatTableDataSource<File>;
+  selection = new SelectionModel<File>(true, []);
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['select', 'name', 'description', 'details', 'edit', 'delete'];
+  displayedColumns = ['select', 'filename', 'mimetype', 'encoding', 'download', 'details', 'edit', 'delete'];
 
   loading: boolean;
+  downloadLink: string = env.downloadLinkServer;
+
   private querySubscription: Subscription;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -213,14 +236,14 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.querySubscription = this.apollo
       .watchQuery<any>({
-        query: roleList
+        query: fileList
       })
       .valueChanges.subscribe(
         ({ data, loading }) => {
           this.loading = loading;
 
           if (data) {
-            this.dataSource.data = data.roles;
+            this.dataSource.data = data.files;
           }
         },
         error => {
@@ -255,10 +278,10 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
     return numSelected === numRows;
   }
 
-  onDelete(role: Role): void {
+  onDelete(file: File): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
-        message: `¿Está seguro que desea eliminar el rol "${role.name}"?`,
+        message: `¿Está seguro que desea eliminar el archivo "${file.filename}"?`,
       }
     });
 
@@ -266,18 +289,18 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (result) {
         this.loading = true;
         this.apollo.mutate({
-          mutation: deleteRole,
+          mutation: deleteFile,
           variables: {
             where: {
-              id: role.id
+              id: file.id
             }
           }
         }).subscribe(( {data} ) => {
           this.loading = false;
 
           if (data) {
-            this.dataSource.data = this.dataSource.data.filter(roles => roles.id !== role.id);
-            this.snackBar.open(`Rol ${data.deleteRole.name} eliminado correctamente`, 'X', {duration: 3000});
+            this.dataSource.data = this.dataSource.data.filter(files => files.id !== file.id);
+            this.snackBar.open(`Archivo ${data.deleteFile.filename} eliminado correctamente`, 'X', {duration: 3000});
           }
         }, (error) => {
           this.loading = false;
@@ -291,7 +314,7 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
   onDeleteSelected($event): void {
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
-        message: `¿Está seguro que desea eliminar los ${this.selection.selected.length} roles selecionados?`,
+        message: `¿Está seguro que desea eliminar los ${this.selection.selected.length} files selecionados?`,
       }
     });
 
@@ -299,7 +322,7 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (result) {
         this.loading = true;
         this.apollo.mutate({
-          mutation: deleteManyRoles,
+          mutation: deleteManyFiles,
           variables: {
             where: {
               id_in: this.selection.selected.map(data => data.id)
@@ -309,9 +332,9 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.loading = false;
 
           if (data) {
-            this.dataSource.data = this.dataSource.data.filter(role => !this._roleExist(role, this.selection.selected));
+            this.dataSource.data = this.dataSource.data.filter(file => !this._fileExist(file, this.selection.selected));
             this.selection.clear();
-            this.snackBar.open(`Los ${data.deleteManyRoles.count} roles fueron eliminados correctamente`, 'X', {duration: 3000});
+            this.snackBar.open(`Los ${data.deleteManyFiles.count} archivos fueron eliminados correctamente`, 'X', {duration: 3000});
           }
         }, (error) => {
           this.loading = false;
@@ -322,8 +345,8 @@ export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private _roleExist(role: Role, roles: any): boolean {
-    if (roles.some(data => (data.id === role.id))) {
+  private _fileExist(file: File, files: any): boolean {
+    if (files.some(data => (data.id === file.id))) {
       return true;
     }
     return false;

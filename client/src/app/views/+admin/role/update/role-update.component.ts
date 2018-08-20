@@ -61,7 +61,7 @@ const roleQuery = gql`
               <mat-card-actions>
                 <button mat-raised-button color="primary" type="submit" [disabled]="!updateRoleForm.valid" aria-label="updateRole">
                   <mat-icon>mode_edit</mat-icon>
-                  <span>Usuario</span>
+                  <span>Rol</span>
                 </button>
 
                 <button mat-raised-button color="accent" routerLink="/admin/role" routerLinkActive type="button" aria-label="rolesList">
@@ -94,7 +94,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private activedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private apollo: Apollo
   ) {}
@@ -105,7 +105,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
       description: ['']
     });
 
-    this.roleId = this.activedRoute.snapshot.params['id'];
+    this.roleId = this.activatedRoute.snapshot.params['id'];
 
     this.loading = true;
     this.updateRoleForm.disable();

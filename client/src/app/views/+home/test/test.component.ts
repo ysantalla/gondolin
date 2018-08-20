@@ -9,8 +9,8 @@ import gql from 'graphql-tag';
 
 
 const singleUpload = gql`
-mutation singleUpload($file: Upload!) {
-  singleUpload(file: $file) {
+mutation uploadFile($file: Upload!) {
+  uploadFile(file: $file) {
     filename
   }
 }
@@ -85,28 +85,6 @@ export class TestComponent implements OnInit {
     }
   }
 
-  fileChange(event) {
-    const fileList: FileList = event.target.files;
-    if (fileList.length > 0) {
-        const file: File = fileList[0];
 
-        console.log(file);
-
-        this.apollo.mutate({
-          mutation: singleUpload,
-          variables: {
-            'file': file
-          }
-        }).subscribe(( {data} ) => {
-          this.loading = false;
-          console.log(data);
-         // this.router.navigate(['home']);
-        }, (error) => {
-          this.fileUploadForm.enable();
-          this.loading = false;
-          this.snackBar.open(error.message, 'X', {duration: 3000});
-        });
-    }
-  }
 
 }

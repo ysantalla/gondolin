@@ -32,6 +32,6 @@
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*", "../client/src/app/views/+admin/file/update/file-update.component.ts", "../client/src/app/views/+admin/file/list/file-list.component.ts", "../client/src/app/views/+admin/file/details/file-details.component.ts", "../client/src/app/views/+admin/file/create/file-create.component.ts", "../client/src/app/views/+admin/role/details/role-details.component.ts", "../client/src/app/views/+admin/role/details/file-details.component.ts"
   ]
 }

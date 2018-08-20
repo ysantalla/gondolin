@@ -1,15 +1,21 @@
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import * as path from 'path';
+import * as fs from 'fs';
 import { createServer } from 'http';
 import { MemcachedCache } from 'apollo-server-cache-memcached';
 
 import { CONFIG } from './config';
 import { Prisma } from './generated/prisma';
+import { getAuthUser } from './utils'
 
 import { resolvers } from './resolvers';
 import { typeDefs } from './schemas';
 
-import { getAuthUser } from './utils'
+const schema = makeExecutableSchema({
+  typeDefs: typeDefs,
+  resolvers: resolvers
+})
 
 const app = express();
 
@@ -19,28 +25,35 @@ const db = new Prisma({
   secret: CONFIG.PRISMA_SECRET
 });
 
-const server = new ApolloServer({
-  typeDefs: typeDefs,
-  resolvers: resolvers,
-  context: async ({ req, res }) => {
-    const auth: any = getAuthUser(req);
 
-    console.log(auth);
+app.get('/download/:id', async (req, res) => {
+  const file = await db.query.file({where: {id: req.params.id}});
+  const filePath = path.join(__dirname, file.path);
+  res.download(filePath, file.filename); 
+});
+
+
+const server = new ApolloServer({
+  schema: schema,
+  context: async ({ req, res }) => {
+    const user: any = getAuthUser(req);
     return {
       req,
       res,
       db,
-      auth
+      user
     };
   },
   cache: new MemcachedCache(
     ['memcached-server-1', 'memcached-server-2', 'memcached-server-3'],
     { retries: 10, retry: 10000 }
   ),
-  debug: true,
+  debug: false,
   subscriptions: {
     onConnect: (connectionParams: any, webSocket, context) => {
       console.log('connect');
+
+      //webSocket.close();
 
       console.log(connectionParams.authToken);
     },

@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   httpLinkServer: 'http://localhost:5000/graphql',
   wsLinkServer: 'ws://localhost:5000/subscriptions',
+  downloadLinkServer: 'http://localhost:5000/download',
   envName: 'Development',
   appName: 'GONDOLIN'
 };

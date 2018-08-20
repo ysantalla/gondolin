@@ -100,13 +100,13 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private activedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private apollo: Apollo
   ) {}
 
   ngOnInit() {
-    this.userId = this.activedRoute.snapshot.params['id'];
+    this.userId = this.activatedRoute.snapshot.params['id'];
 
     this.loading = true;
 

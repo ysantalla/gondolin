@@ -22,6 +22,12 @@ const USER_QUERY = gql`
   }
 `;
 
+const DOWNLOAD_FILE = gql`
+  mutation downloadFile($id: String) {
+    downloadFile(id: $id)
+  }
+`;
+
 
 @Component({
   selector: 'app-home',
@@ -49,6 +55,16 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.apollo.mutate({
+      mutation: DOWNLOAD_FILE,
+      variables: {
+        id: 'cjkzo55u300500a89cextcbtq'
+      }
+    }).subscribe(( {data} ) => {
+      console.log(data);
+      });
+
+
     this.usersQuery = this.apollo.watchQuery({
       query: USER_QUERY
     });

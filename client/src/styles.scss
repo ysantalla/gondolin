@@ -21,7 +21,11 @@ mat-form-field.mat-form-field {
   font-size: 18px;
 }
 
-.menu {
+a.menu {
+  border-left: 4px solid mat-color($accent);
+}
+
+a.active {
   border-left: 4px solid mat-color($primary);
 }
 
@@ -53,6 +57,10 @@ div.container > div.loading, div.loading {
   align-items: center;
   justify-content: center;
 
+}
+
+.create-button {
+  z-index: 1024;
 }
 
 .spacer {

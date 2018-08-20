@@ -1,13 +1,11 @@
 import { importSchema } from 'graphql-import';
-import { gql } from 'apollo-server-express';
+//import { gql } from 'apollo-server-express';
 
-import { mergeSchemas } from 'graphql-tools';
+export const typeDefs = importSchema('./src/schemas/schema.graphql');
 
-const importedTypeDefs = importSchema('./src/schemas/schema.graphql');
+// const typeSchema = gql`
+//   ${importedTypeDefs}
+// `;
 
-const typeSchema = gql`
-  ${importedTypeDefs}
-`;
-
-export const typeDefs = typeSchema;
+// export const typeDefs = typeSchema;
 

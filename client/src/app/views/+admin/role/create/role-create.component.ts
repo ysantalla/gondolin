@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import gql from 'graphql-tag';
 
 
-const createRole = gql`
-  mutation createRole($data: RoleCreateInput!) {
-    createRole(data: $data) {
+const uploadFile = gql`
+  mutation uploadFile($data: RoleCreateInput!) {
+    uploadFile(data: $data) {
       name
       description
     }
@@ -99,7 +99,7 @@ export class RoleCreateComponent implements OnInit {
 
       this.createRoleForm.disable();
       this.apollo.mutate({
-        mutation: createRole,
+        mutation: uploadFile,
         variables: {
           data: {
             'name': this.createRoleForm.value.name,
@@ -111,7 +111,7 @@ export class RoleCreateComponent implements OnInit {
         this.createRoleForm.enable();
 
         if (data) {
-          this.snackBar.open(`Usuario ${data.createRole.name} creado correctamente`, 'X', {duration: 3000});
+          this.snackBar.open(`Rol ${data.createRole.name} creado correctamente`, 'X', {duration: 3000});
           this.router.navigate(['admin', 'role']);
         }
       }, (error) => {

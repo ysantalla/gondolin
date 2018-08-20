@@ -8,7 +8,7 @@ import { ApolloError } from 'apollo-server-express';
 
 const APP_SECRET: any = CONFIG.APP_SECRET;
 
-export const auth = {
+export const AuthMutation = {
   async signup(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
 
     let roleId = await ctx.db.query.role({ where: { name: 'USER' } }, `{id}`);
@@ -97,6 +97,8 @@ export const auth = {
     if (!valid) {
       throw new ApolloError('Invalid password');
     }
+
+    console.log("yasmany");
 
     return {
       token: jwt.sign(

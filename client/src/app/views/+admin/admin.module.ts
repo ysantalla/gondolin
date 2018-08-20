@@ -17,6 +17,11 @@ import { RoleCreateComponent } from './role/create/role-create.component';
 import { RoleUpdateComponent } from './role/update/role-update.component';
 import { RoleDetailsComponent } from './role/details/role-details.component';
 
+import { FileListComponent } from './file/list/file-list.component';
+import { FileUploadComponent } from './file/upload/file-upload.component';
+import { FileChangeComponent } from './file/change/file-change.component';
+import { FileDetailsComponent } from './file/details/file-details.component';
+
 
 const routes: Routes = [
   {
@@ -67,6 +72,30 @@ const routes: Routes = [
     data: {title: 'Detalles Rol', expectedRole: 'ADMIN'},
     canActivate: [RoleGuard]
   },
+  {
+    path: 'file',
+    component: FileListComponent,
+    data: {title: 'Listado de Files', expectedRole: 'ADMIN'},
+    canActivate: [RoleGuard]
+  },
+  {
+    path: 'file/upload',
+    component: FileUploadComponent,
+    data: {title: 'Subir Archivo', expectedRole: 'ADMIN'},
+    canActivate: [RoleGuard]
+  },
+  {
+    path: 'file/change/:id',
+    component: FileChangeComponent,
+    data: {title: 'Cambiar Archivo', expectedRole: 'ADMIN'},
+    canActivate: [RoleGuard]
+  },
+  {
+    path: 'file/details/:id',
+    component: FileDetailsComponent,
+    data: {title: 'Detalles archivo', expectedRole: 'ADMIN'},
+    canActivate: [RoleGuard]
+  },
 ];
 
 
@@ -80,7 +109,8 @@ const routes: Routes = [
   ],
   declarations: [
     UserListComponent, UserCreateComponent, UserUpdateComponent, UserDetailsComponent,
-    RoleListComponent, RoleCreateComponent, RoleUpdateComponent, RoleDetailsComponent
+    RoleListComponent, RoleCreateComponent, RoleUpdateComponent, RoleDetailsComponent,
+    FileListComponent, FileUploadComponent, FileChangeComponent, FileDetailsComponent,
   ]
 })
 

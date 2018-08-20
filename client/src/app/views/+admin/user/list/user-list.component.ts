@@ -68,18 +68,18 @@ const deleteManyUsers = gql`
         </div>
       </div>
 
-      <div [hidden]="!(this.dataSource.data.length > 0)">
-
-        <div fxLayout="row" fxLayoutAlign="center center">
-          <div class="item" fxFlex="98%">
-            <button mat-raised-button color="primary" routerLink="/admin/user/create" routerLinkActive="active">
-              <mat-icon>add</mat-icon>
-              <span>Usuario</span>
-            </button>
-          </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <div class="item" fxFlex="98%">
+          <button class="create-button" mat-raised-button color="primary" routerLink="/admin/user/create" routerLinkActive="active">
+            <mat-icon>add</mat-icon>
+            <span>Usuario</span>
+          </button>
         </div>
+      </div>
 
-        <br />
+      <br />
+
+      <div [hidden]="!(this.dataSource.data.length > 0)">
 
         <div fxLayout="row" fxLayoutAlign="center center">
           <div class="item" fxFlex="98%">
@@ -88,7 +88,7 @@ const deleteManyUsers = gql`
 
               <mat-form-field class="full-width">
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrado por nombre y correo">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrado por nombre, apellidos y correo">
               </mat-form-field>
 
               <mat-table #table [dataSource]="dataSource" matSort aria-label="Elements">
