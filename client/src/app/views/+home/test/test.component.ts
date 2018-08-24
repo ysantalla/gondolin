@@ -1,90 +1,64 @@
-
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
-
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
-
-
-const singleUpload = gql`
-mutation uploadFile($file: Upload!) {
-  uploadFile(file: $file) {
-    filename
-  }
-}
-`;
-
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition
+} from '@angular/animations';
 
 @Component({
   selector: 'app-test',
   template: `
+    <div class="container" fxLayout="column" fxLayoutAlign="center center">
+      <div class="item" fxFlex="50%" fxFlex.xs="90%" fxFlex.md="90%">
 
-  <div *ngIf="loading">
-  <mat-progress-bar color="warn"></mat-progress-bar>
-</div>
-<br />
-<div class="container" fxLayout="column" fxLayoutAlign="center center">
-  <div class="item" fxFlex="50%" fxFlex.xs="90%" fxFlex.md="90%">
-    <form [formGroup]="fileUploadForm" #f="ngForm" (ngSubmit)="onUpload()" class="example-form">
-      <mat-card class="card">
+        <button mat-button
+            [@heroState]="state"
+            (click)="toggleState()">
+          click
+        </button>
 
-        <h1 class="mat-h1">Registrar</h1>
-        <mat-card-content>
+        </div>
+    </div>
 
-            <input required type="file" (change)="fileChange($event)" placeholder="File" formControlName="file">
-
-
-          </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" type="submit" [disabled]="!fileUploadForm.valid" aria-label="login">
-            <mat-icon>account_circle</mat-icon>
-            <span>Registrar</span>
-          </button>
-
-
-        </mat-card-actions>
-      </mat-card>
-
-    </form>
-  </div>
-</div>
   `,
-  styles: []
+  styles: [],
+  animations: [
+    trigger('heroState', [
+      state('inactive', style({transform: 'translateX(0) scale(1)'})),
+      state('active',   style({transform: 'translateX(0) scale(1.1)'})),
+      transition('inactive => active', animate('100ms ease-in')),
+      transition('active => inactive', animate('100ms ease-out')),
+      transition('void => inactive', [
+        style({transform: 'translateX(-100%) scale(1)'}),
+        animate(100)
+      ]),
+      transition('inactive => void', [
+        animate(100, style({transform: 'translateX(100%) scale(1)'}))
+      ]),
+      transition('void => active', [
+        style({transform: 'translateX(0) scale(0)'}),
+        animate(200)
+      ]),
+      transition('active => void', [
+        animate(200, style({transform: 'translateX(0) scale(0)'}))
+      ])
+    ])
+  ]
 })
 export class TestComponent implements OnInit {
-
-  fileUploadForm: FormGroup;
   loading = false;
   hide = true;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private apollo: Apollo
-  ) { }
+  public name: string;
+  public state = 'inactive';
 
-  ngOnInit() {
-    this.fileUploadForm = this.formBuilder.group({
-      file: ['', Validators.required]
-    });
+  constructor() {}
+
+  ngOnInit() {}
+
+  toggleState() {
+    this.state = this.state === 'active' ? 'inactive' : 'active';
   }
-
-  onUpload(): void {
-
-    this.loading = true;
-
-    if (this.fileUploadForm.valid) {
-      this.fileUploadForm.disable();
-
-    } else {
-      this.loading = false;
-      console.log('Form not valid');
-    }
-  }
-
-
-
 }

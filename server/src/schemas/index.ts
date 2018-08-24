@@ -1,7 +1,9 @@
 import { importSchema } from 'graphql-import';
 //import { gql } from 'apollo-server-express';
 
-export const typeDefs = importSchema('./src/schemas/schema.graphql');
+import * as path from 'path';
+
+export const typeDefs = importSchema(path.resolve('src/schemas/schema.graphql'));
 
 // const typeSchema = gql`
 //   ${importedTypeDefs}

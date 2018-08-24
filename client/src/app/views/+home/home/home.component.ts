@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
 
 const USER_SUBSCRIPTION = gql`
-  subscription  {
+  subscription userSubscription {
     userSubscription {
       node {
         firstname
@@ -19,12 +19,6 @@ const USER_QUERY = gql`
     users {
       firstname
     }
-  }
-`;
-
-const DOWNLOAD_FILE = gql`
-  mutation downloadFile($id: String) {
-    downloadFile(id: $id)
   }
 `;
 
@@ -55,16 +49,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.apollo.mutate({
-      mutation: DOWNLOAD_FILE,
-      variables: {
-        id: 'cjkzo55u300500a89cextcbtq'
-      }
-    }).subscribe(( {data} ) => {
-      console.log(data);
-      });
-
-
     this.usersQuery = this.apollo.watchQuery({
       query: USER_QUERY
     });
@@ -92,11 +76,6 @@ export class HomeComponent implements OnInit {
         }
 
         const newUserItem = subscriptionData.data.userSubscription;
-
-        console.log(subscriptionData.data);
-
-        console.log(newUserItem.node, prev);
-
         return Object.assign({}, prev, {
           users: [...prev['users'], newUserItem.node]
         });

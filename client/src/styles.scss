@@ -21,11 +21,11 @@ mat-form-field.mat-form-field {
   font-size: 18px;
 }
 
-a.menu {
+.menu {
   border-left: 4px solid mat-color($accent);
 }
 
-a.active {
+.active {
   border-left: 4px solid mat-color($primary);
 }
 

@@ -1,22 +1,17 @@
 import { createWriteStream, unlinkSync, exists } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as shortid from 'shortid';
+import * as path from 'path';
 
 import { ApolloError } from 'apollo-server-express';
 import * as jwt from 'jsonwebtoken';
 import { Prisma } from './generated/prisma';
 
-import { CONFIG } from './config';
-import { User } from './models/user.model';
-
 export interface Context {
   db: Prisma;
   req: any;
   res: any;
-  user: User;
 }
-
-const ROOTDIR = './src';
 
 export function getUserId(ctx: Context) {
   const tokenDecoded: any = getTokenDecoded(ctx.req);
@@ -36,7 +31,7 @@ export function getAuthUser(req: any) {
 
 function getTokenDecoded(req: any): any {
   const Authorization = req.get('Authorization') || null;
-  const secret: any = CONFIG.APP_SECRET;
+  const secret: any = process.env.APP_SECRET;
 
   if (Authorization) {
     const token: string = Authorization.replace('Bearer ', '');
@@ -52,28 +47,33 @@ function getTokenDecoded(req: any): any {
 async function storeFS({ stream, filename }): Promise<any> {
   
   const folderId = shortid.generate();
-  mkdirp.sync(`${ROOTDIR}/uploads/${folderId}`);
-  const path = `uploads/${folderId}/${filename}`;
+  const rootPath = path.join(__dirname, 'uploads', folderId);
 
+  mkdirp.sync(rootPath);
+
+  console.log(path.join(__dirname));
+  
   return new Promise((resolve, reject) =>
     stream
       .on('error', error => {
         if (stream.truncated)
           // Delete the truncated file
-          unlinkSync(path);
+          unlinkSync(`${rootPath}/${filename}`);
         reject(error);
       })
-      .pipe(createWriteStream(`${ROOTDIR}/${path}`))
-      .on('finish', () => resolve({ path }))
+      .pipe(createWriteStream(`${rootPath}/${filename}`))
+      .on('finish', () => resolve({ path: `uploads/${folderId}/${filename}`}))
       .on('error', error => reject(error))
   );
 }
 
 export async function removeFS(filepath: string): Promise<any> { 
 
+  const rootPath = path.join(__dirname);
+
   return new Promise((resolve, reject) => {
       try {
-        unlinkSync(`${ROOTDIR}/${filepath}`);
+        unlinkSync(`${rootPath}/${filepath}`);
         resolve(true);
       } catch (err) {
         console.log(err);

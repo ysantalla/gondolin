@@ -13,11 +13,11 @@ import { environment as env } from '@env/environment';
 @Component({
   selector: 'app-layout',
   template: `
-    <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav-container class="sidenav-container" autosize>
       <mat-sidenav
         #drawer
         class="sidenav"
-        fixedInViewport="true"
+        fixedInViewport="false"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
@@ -41,7 +41,20 @@ import { environment as env } from '@env/environment';
             <mat-icon aria-label="files">folder</mat-icon>
             <span>Gestión de Archivos</span>
           </a>
+
+          <a class="menu" *ngIf="(isAdmin | async)"
+                mat-list-item routerLink="/home/home" routerLinkActive="active">
+            <mat-icon aria-label="files">folder</mat-icon>
+            <span>Gestión de Archivos</span>
+          </a>
+
+          <!--<app-tree-menu></app-tree-menu>-->
+
         </mat-nav-list>
+        <mat-toolbar class="sidenav-footer">
+          <span class="spacer"></span>
+          <span class="version">v1.0.0</span>
+        </mat-toolbar>
       </mat-sidenav>
       <mat-sidenav-content>
         <mat-toolbar class="shadow-navbar" color="primary">
@@ -50,8 +63,7 @@ import { environment as env } from '@env/environment';
               type="button"
               aria-label="Toggle sidenav"
               mat-icon-button
-              (click)="drawer.toggle()"
-              *ngIf="isHandset$ | async">
+              (click)="drawer.toggle()">
               <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
 
@@ -92,7 +104,12 @@ import { environment as env } from '@env/environment';
         </mat-toolbar>
 
         <div class="layout">
-          <router-outlet></router-outlet>
+          <div>
+            <div class="item" [@routerTransition]="o.isActivated && o.activatedRoute.routeConfig.path"
+            >
+              <router-outlet #o="outlet"></router-outlet>
+            </div>
+          </div>
         </div>
 
       </mat-sidenav-content>
@@ -108,13 +125,13 @@ import { environment as env } from '@env/environment';
       margin-bottom: 2px;
     }
 
-    .mat-month-view > table.mat-calendar-table {
-      width: 220px;
+    .sidenav {
+      box-shadow: 3px 0 6px rgba(0,0,0,.24);
     }
 
-    .sidenav {
-      width: 220px;
-      box-shadow: 3px 0 6px rgba(0,0,0,.24);
+    .version {
+      font-family: 'Roboto, monospace'
+      font-size: 12px;
     }
 
     .mat-toolbar-row, .mat-toolbar-single-row {
@@ -122,9 +139,18 @@ import { environment as env } from '@env/environment';
     }
 
     .layout {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 93.0vh;
       min-height auto;
+    }
+
+    .sidenav-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 35px;
+      padding: 10px;
     }
 
     mat-toolbar button.active, mat-toolbar a.active {
@@ -155,7 +181,8 @@ import { environment as env } from '@env/environment';
       padding-right: 10px;
     }
 
-  `]
+  `],
+  animations: [routerTransition]
 })
 export class LayoutComponent implements OnInit {
 

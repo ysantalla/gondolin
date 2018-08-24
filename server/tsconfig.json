@@ -1,37 +1,22 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
+    "declaration": false,
     "noImplicitAny": false,
-    "moduleResolution": "node",
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
     "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "lib": [
-      "es5",
-      "es6",
-      "dom",
-      "es2015.core",
-      "es2015.collection",
-      "es2015.generator",
-      "es2015.iterable",
-      "es2015.promise",
-      "es2015.proxy",
-      "es2015.reflect",
-      "es2015.symbol",
-      "es2015.symbol.wellknown",
-      "esnext.asynciterable"
-    ],
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ]
-    }
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "lib": ["dom", "es2017", "esnext.asynciterable"],
   },
   "include": [
-    "src/**/*", "../client/src/app/views/+admin/file/update/file-update.component.ts", "../client/src/app/views/+admin/file/list/file-list.component.ts", "../client/src/app/views/+admin/file/details/file-details.component.ts", "../client/src/app/views/+admin/file/create/file-create.component.ts", "../client/src/app/views/+admin/role/details/role-details.component.ts", "../client/src/app/views/+admin/role/details/file-details.component.ts"
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

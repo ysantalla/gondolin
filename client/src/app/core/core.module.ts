@@ -77,8 +77,6 @@ export class CoreModule {
       }
     });
 
-    console.log("yasmany santalla pereda");
-
     const link = split(
       ({ query }) => {
         const definition = getMainDefinition(query);

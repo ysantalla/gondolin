@@ -1,14 +1,11 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
-import express from 'express';
+import * as express from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 import { createServer } from 'http';
 import { MemcachedCache } from 'apollo-server-cache-memcached';
 
-import { CONFIG } from './config';
 import { Prisma } from './generated/prisma';
-import { getAuthUser } from './utils'
-
 import { resolvers } from './resolvers';
 import { typeDefs } from './schemas';
 
@@ -21,9 +18,11 @@ const app = express();
 
 const db = new Prisma({
   debug: true,
-  endpoint: CONFIG.PRISMA_URL,
-  secret: CONFIG.PRISMA_SECRET
+  endpoint: process.env.PRISMA_ENDPOINT,
+  secret: process.env.PRISMA_SECRET
 });
+
+
 
 
 app.get('/download/:id', async (req, res) => {
@@ -36,22 +35,21 @@ app.get('/download/:id', async (req, res) => {
 const server = new ApolloServer({
   schema: schema,
   context: async ({ req, res }) => {
-    const user: any = getAuthUser(req);
+    
     return {
       req,
       res,
-      db,
-      user
+      db
     };
   },
   cache: new MemcachedCache(
     ['memcached-server-1', 'memcached-server-2', 'memcached-server-3'],
     { retries: 10, retry: 10000 }
   ),
-  debug: false,
+  debug: true,
   subscriptions: {
     onConnect: (connectionParams: any, webSocket, context) => {
-      console.log('connect');
+      console.log(context.request.headers);
 
       //webSocket.close();
 
@@ -69,12 +67,12 @@ server.applyMiddleware({ app, path: '/graphql' });
 const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-httpServer.listen(CONFIG.PORT, () => {
+httpServer.listen(process.env.PORT, () => {
   console.log(
-    `🚀 Server ready at http://localhost:${CONFIG.PORT}${server.graphqlPath}`
+    `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
   );
   console.log(
-    `🚀 Subscriptions ready at ws://localhost:${CONFIG.PORT}${
+    `🚀 Subscriptions ready at ws://localhost:${process.env.PORT}${
       server.subscriptionsPath
     }`
   );

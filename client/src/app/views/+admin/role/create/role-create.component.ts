@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import gql from 'graphql-tag';
 
 
-const uploadFile = gql`
-  mutation uploadFile($data: RoleCreateInput!) {
-    uploadFile(data: $data) {
+const createRole = gql`
+  mutation createRole($data: RoleCreateInput!) {
+    createRole(data: $data) {
       name
       description
     }
@@ -99,7 +99,7 @@ export class RoleCreateComponent implements OnInit {
 
       this.createRoleForm.disable();
       this.apollo.mutate({
-        mutation: uploadFile,
+        mutation: createRole,
         variables: {
           data: {
             'name': this.createRoleForm.value.name,

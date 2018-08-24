@@ -3,10 +3,9 @@ import * as jwt from 'jsonwebtoken';
 import { Context, getUserId } from '../../utils';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CONFIG } from '../../config';
 import { ApolloError } from 'apollo-server-express';
 
-const APP_SECRET: any = CONFIG.APP_SECRET;
+const APP_SECRET: string = process.env.APP_SECRET;
 
 export const AuthMutation = {
   async signup(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {

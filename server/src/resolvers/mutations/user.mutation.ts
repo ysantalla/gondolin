@@ -5,9 +5,12 @@ import { ApolloError, AuthenticationError } from 'apollo-server-express';
 
 export const UserMutation = {
   async createUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
-      throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }
+    /*if (ctx.user) {
+      if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
+        throw new AuthenticationError('Not authorized, only ADMIN role user');
+      }
+    }*/
+    
     
     const password = await bcrypt.hash(args.data.password, 10);
     return await ctx.db.mutation.createUser(
@@ -22,9 +25,9 @@ export const UserMutation = {
   },
 
   async updateUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
+    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
       throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }
+    }*/
     const userExist = await ctx.db.exists.User({
       id: args.where.id
     });
@@ -50,9 +53,9 @@ export const UserMutation = {
   },
 
   async deleteUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
+    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
       throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }
+    }*/
 
     const userExist = await ctx.db.exists.User({
       id: args.where.id});
@@ -70,9 +73,9 @@ export const UserMutation = {
   },
 
   async deleteManyUsers(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
+    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
       throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }
+    }*/
     return await ctx.db.mutation.deleteManyUsers({
       where: {...args.where}
     },

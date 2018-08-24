@@ -38,12 +38,12 @@ import {
 import { CustomMatPaginatorIntl } from '@app/shared/class/mat-paginator-intl';
 
 import 'hammerjs';
-
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { RouterModule } from '@angular/router';
 import { ConfirmComponent } from '@app/shared/confirm/confirm.component';
+import { TreeMenuComponent } from './tree-menu/tree-menu.component';
 
 @NgModule({
   imports: [
@@ -79,6 +79,7 @@ import { ConfirmComponent } from '@app/shared/confirm/confirm.component';
     MatTreeModule,
     MatSliderModule,
     MatSlideToggleModule,
+    MatTreeModule,
     FlexLayoutModule,
 
     RouterModule
@@ -118,12 +119,14 @@ import { ConfirmComponent } from '@app/shared/confirm/confirm.component';
     MatTreeModule,
     MatSliderModule,
     MatSlideToggleModule,
+    MatTreeModule,
     FlexLayoutModule,
 
     LayoutComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    TreeMenuComponent
   ],
-  declarations: [LayoutComponent, ConfirmComponent],
+  declarations: [LayoutComponent, ConfirmComponent, TreeMenuComponent],
   providers: [
     {provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl}
   ],
