@@ -22,13 +22,21 @@ const db = new Prisma({
   secret: process.env.PRISMA_SECRET
 });
 
-
-
-
 app.get('/download/:id', async (req, res) => {
   const file = await db.query.file({where: {id: req.params.id}});
-  const filePath = path.join(__dirname, file.path);
-  res.download(filePath, file.filename); 
+
+  if (file) {
+    const filePath = path.join(__dirname, file.path);
+    if (fs.existsSync(filePath)) {
+      res.header('Content-disposition', 'inline; filename=' + file.filename);
+      res.header('Content-type', file.mimetype);
+      res.download(filePath, file.filename); 
+    } else {
+      res.send("File not found");
+    }      
+  } else {
+    res.send("Error file not found1");
+  }    
 });
 
 

@@ -133,6 +133,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profileForm.enable();
       }
       this.loading = loading;
+    }, (error) => {
+        this.profileForm.enable();
+        this.loading = false;
+        this.snackBar.open(error, 'X', {duration: 3000});
     });
 
   }

@@ -1,6 +1,6 @@
 import { NgModule, SkipSelf, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from '@angular/common/http';
 
 import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-upload-angular-link-http';
@@ -15,6 +15,7 @@ import { environment as env } from '@env/environment';
 import { AuthService } from '@app/core/services/auth.service';
 import { AuthGuard } from '@app/core/guard/auth.guard';
 import { RoleGuard } from '@app/core/guard/role.guard';
+import { UploadInterceptor } from '@app/core/interceptors/upload.interceptor';
 
 @NgModule({
   imports: [
@@ -23,7 +24,12 @@ import { RoleGuard } from '@app/core/guard/role.guard';
     ApolloModule,
     HttpLinkModule
   ],
-  providers: [AuthGuard, RoleGuard, AuthService],
+  providers: [AuthGuard, RoleGuard, AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UploadInterceptor,
+      multi: true
+    }],
   declarations: []
 })
 export class CoreModule {
@@ -41,8 +47,9 @@ export class CoreModule {
     }
 
     const http = httpLink.create({
-      uri: env.httpLinkServer
+      uri: env.httpLinkServer,
     });
+
 
     const auth_middleware = new ApolloLink((operation, forward) => {
       operation.setContext({

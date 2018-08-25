@@ -48,10 +48,7 @@ async function storeFS({ stream, filename }): Promise<any> {
   
   const folderId = shortid.generate();
   const rootPath = path.join(__dirname, 'uploads', folderId);
-
   mkdirp.sync(rootPath);
-
-  console.log(path.join(__dirname));
   
   return new Promise((resolve, reject) =>
     stream

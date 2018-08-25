@@ -20,6 +20,7 @@ export const UserQuery = {
       }
     }*/
     const id = getUserId(ctx);
+    console.log(id);
     return ctx.db.query.user({where: {id: id } }, info);
   },
 

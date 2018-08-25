@@ -4,6 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import gql from 'graphql-tag';
+import { validate } from 'graphql';
 
 
 const singleUpload = gql`
@@ -46,7 +47,10 @@ mutation uploadFiles($files: [Upload!]!) {
               <mat-card-content>
 
                 <div class="full-width">
-                  <input required type="file" (change)="fileChange($event)" multiple placeholder="File" formControlName="file">
+                  <button mat-button color="accent" mat-mini-fab type="button" (click)="uploadFile.click()">
+                  <mat-icon>attachment</mat-icon></button>
+                  <input required hidden type="file" #uploadFile (change)="fileChange($event)"
+                     multiple placeholder="File" formControlName="files">
                 </div>
 
                 <mat-list *ngFor="let file of files">
@@ -94,7 +98,7 @@ export class FileUploadComponent implements OnInit {
   ngOnInit() {
 
     this.fileUploadForm = this.formBuilder.group({
-      file: ['', Validators.required]
+      files: ['', Validators.required]
     });
   }
 
