@@ -12,8 +12,7 @@ export const FileMutation = {
     });
   },
 
-  async uploadFiles(parent, {files}, ctx: Context, info: GraphQLResolveInfo) {
-    
+  async uploadFiles(parent, {files}, ctx: Context, info: GraphQLResolveInfo) {    
 
     return await Promise.all(files.map(async (file) =>  {
       const data: any = await processUpload(file);
@@ -23,8 +22,7 @@ export const FileMutation = {
     }));
   },
 
-  async changeFile(parent: any, {file, where}, ctx: Context, info: GraphQLResolveInfo) {
-    
+  async changeFile(parent: any, {file, where}, ctx: Context, info: GraphQLResolveInfo) {    
     
     const fileExist = await ctx.db.exists.File({id: where.id});
 
@@ -45,8 +43,7 @@ export const FileMutation = {
     );
   },
 
-  async deleteFile(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    
+  async deleteFile(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {    
     
     const FileExist = await ctx.db.exists.File({id: args.where.id});
 
@@ -65,8 +62,7 @@ export const FileMutation = {
     );
   },
 
-  async deleteManyFiles(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    
+  async deleteManyFiles(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {    
 
     const files = await ctx.db.query.files({where: {...args.where}});
     const datas = await Promise.all(files.map(file => removeFS(file.path)));

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from '@angular/common/http';
 
 import { ApolloModule, Apollo } from 'apollo-angular';
-import { HttpLinkModule, HttpLink } from 'apollo-upload-angular-link-http';
+import { HttpLinkModule, HttpLink  } from 'apollo-angular-link-http';
 import { ApolloLink, split  } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { WebSocketLink } from 'apollo-link-ws';
@@ -15,7 +15,8 @@ import { environment as env } from '@env/environment';
 import { AuthService } from '@app/core/services/auth.service';
 import { AuthGuard } from '@app/core/guard/auth.guard';
 import { RoleGuard } from '@app/core/guard/role.guard';
-import { UploadInterceptor } from '@app/core/interceptors/upload.interceptor';
+import { ApiInterceptor } from '@app/core/interceptors/api.interceptor';
+
 
 @NgModule({
   imports: [
@@ -27,7 +28,7 @@ import { UploadInterceptor } from '@app/core/interceptors/upload.interceptor';
   providers: [AuthGuard, RoleGuard, AuthService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: UploadInterceptor,
+      useClass: ApiInterceptor,
       multi: true
     }],
   declarations: []

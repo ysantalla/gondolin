@@ -1,9 +1,9 @@
-import { createWriteStream, unlinkSync, exists } from 'fs';
+import { createWriteStream, unlinkSync, lstatSync } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as shortid from 'shortid';
 import * as path from 'path';
 
-import { ApolloError } from 'apollo-server-express';
+import { ApolloError, AuthenticationError } from 'apollo-server-core';
 import * as jwt from 'jsonwebtoken';
 import { Prisma } from './generated/prisma';
 
@@ -14,34 +14,14 @@ export interface Context {
 }
 
 export function getUserId(ctx: Context) {
-  const tokenDecoded: any = getTokenDecoded(ctx.req);
-  if (tokenDecoded) {
-    return tokenDecoded.user.id;
-  }
-  return null;
-}
-
-export function getAuthUser(req: any) {
-  const tokenDecoded: any = getTokenDecoded(req);
-  if (tokenDecoded) {
-    return tokenDecoded.user;
-  }
-  return null;
-}
-
-function getTokenDecoded(req: any): any {
-  const Authorization = req.get('Authorization') || null;
-  const secret: any = process.env.APP_SECRET;
-
+  const Authorization = ctx.req.get('Authorization');
   if (Authorization) {
-    const token: string = Authorization.replace('Bearer ', '');
-    try {
-      return jwt.verify(token, secret);
-    } catch (error) {
-      console.log(error);
-    }
+    const token = Authorization.replace('Bearer ', '');
+    const tokenDecoded: any = jwt.verify(token, process.env.APP_SECRET);
+    return tokenDecoded.id;
   }
-  return null;
+
+  throw new AuthenticationError('Not valid token');
 }
 
 async function storeFS({ stream, filename }): Promise<any> {
@@ -59,7 +39,7 @@ async function storeFS({ stream, filename }): Promise<any> {
         reject(error);
       })
       .pipe(createWriteStream(`${rootPath}/${filename}`))
-      .on('finish', () => resolve({ path: `uploads/${folderId}/${filename}`}))
+      .on('finish', () => resolve({ path: `uploads/${folderId}/${filename}`, filePath: `${rootPath}/${filename}`}))
       .on('error', error => reject(error))
   );
 }
@@ -67,13 +47,11 @@ async function storeFS({ stream, filename }): Promise<any> {
 export async function removeFS(filepath: string): Promise<any> { 
 
   const rootPath = path.join(__dirname);
-
   return new Promise((resolve, reject) => {
       try {
         unlinkSync(`${rootPath}/${filepath}`);
         resolve(true);
       } catch (err) {
-        console.log(err);
         resolve(false);
       }
   });
@@ -81,6 +59,9 @@ export async function removeFS(filepath: string): Promise<any> {
 
 export async function processUpload(file) {
   const { stream, filename, mimetype, encoding } = await file;
-  const { path } = await storeFS({ stream, filename });
-  return { filename, mimetype, encoding, path };
+  const { path, filePath } = await storeFS({ stream, filename });
+  
+  const size = lstatSync(filePath).size;
+
+  return { filename, mimetype, encoding, path, size};
 }

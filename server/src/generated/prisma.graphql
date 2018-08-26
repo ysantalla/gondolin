@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Wed Aug 08 2018 15:25:28 GMT-0400 (EDT)
+# timestamp: Sat Aug 25 2018 16:57:19 GMT-0400 (EDT)
 
 type AggregateFile {
   count: Int!
@@ -24,6 +24,7 @@ type File implements Node {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 """A connection to a list of items."""
@@ -41,6 +42,7 @@ input FileCreateInput {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 """An edge in a connection."""
@@ -63,6 +65,8 @@ enum FileOrderByInput {
   mimetype_DESC
   encoding_ASC
   encoding_DESC
+  size_ASC
+  size_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -75,6 +79,7 @@ type FilePreviousValues {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 type FileSubscriptionPayload {
@@ -121,6 +126,7 @@ input FileUpdateInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
 }
 
 input FileWhereInput {
@@ -332,6 +338,28 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   encoding_not_ends_with: String
+  size: Int
+
+  """All values that are not equal to given value."""
+  size_not: Int
+
+  """All values that are contained in given list."""
+  size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  size_not_in: [Int!]
+
+  """All values less than the given value."""
+  size_lt: Int
+
+  """All values less than or equal the given value."""
+  size_lte: Int
+
+  """All values greater than the given value."""
+  size_gt: Int
+
+  """All values greater than or equal the given value."""
+  size_gte: Int
 }
 
 input FileWhereUniqueInput {

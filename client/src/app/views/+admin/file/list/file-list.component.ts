@@ -30,6 +30,7 @@ const fileList = gql`
       filename
       mimetype
       path
+      size
       encoding
     }
   }
@@ -125,6 +126,12 @@ const deleteManyFiles = gql`
                   <mat-cell *matCellDef="let row">{{row.encoding}}</mat-cell>
                 </ng-container>
 
+                <!-- Size Column -->
+                <ng-container matColumnDef="size">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.size | size}}</mat-cell>
+                </ng-container>
+
                 <!-- Download Column -->
                 <ng-container matColumnDef="download">
                   <mat-header-cell fxFlex="7" *matHeaderCellDef>
@@ -213,7 +220,7 @@ export class FileListComponent implements OnInit, AfterViewInit, OnDestroy {
   selection = new SelectionModel<File>(true, []);
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['select', 'filename', 'mimetype', 'encoding', 'download', 'details', 'edit', 'delete'];
+  displayedColumns = ['select', 'filename', 'mimetype', 'encoding', 'size', 'download', 'details', 'edit', 'delete'];
 
   loading: boolean;
   downloadLink: string = env.downloadLinkServer;

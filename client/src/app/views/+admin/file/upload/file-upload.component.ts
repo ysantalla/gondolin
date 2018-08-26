@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import gql from 'graphql-tag';
 import { validate } from 'graphql';
+import { UploadService } from '@app/core/services/upload.service';
 
 
 const singleUpload = gql`
@@ -26,28 +27,27 @@ mutation uploadFiles($files: [Upload!]!) {
 @Component({
   selector: 'app-file-upload',
   template: `
-    <div class="container">
-      <div class="loading">
-        <mat-progress-bar *ngIf="loading" color="warn"></mat-progress-bar>
-      </div>
-    </div>
+
     <br />
     <div class="container" fxLayout="row" fxLayoutAlign="center center">
       <div class="item" fxFlex="50%" fxFlex.xs="98%" fxFlex.md="70%">
 
         <div class="mat-elevation-z8">
+          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="uploadService.getUploadProgress()"
+              [bufferValue]="100 - uploadService.getUploadProgress()"></mat-progress-bar>
+
           <form [formGroup]="fileUploadForm" #f="ngForm" (ngSubmit)="onUploadfile()" class="form">
             <mat-card class="file-card">
               <mat-card-header>
                 <mat-card-title>
-                  <h1>Subir Archivo</h1>
+                  <h3>Subir Archivo</h3>
                 </mat-card-title>
               </mat-card-header>
 
               <mat-card-content>
 
                 <div class="full-width">
-                  <button mat-button color="accent" mat-mini-fab type="button" (click)="uploadFile.click()">
+                  <button mat-button color="accent" mat-fab type="button" (click)="uploadFile.click()">
                   <mat-icon>attachment</mat-icon></button>
                   <input required hidden type="file" #uploadFile (change)="fileChange($event)"
                      multiple placeholder="File" formControlName="files">
@@ -92,7 +92,8 @@ export class FileUploadComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public uploadService: UploadService
   ) { }
 
   ngOnInit() {

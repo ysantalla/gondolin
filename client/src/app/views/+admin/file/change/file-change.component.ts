@@ -4,6 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { MatSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import gql from 'graphql-tag';
+import { UploadService } from '@app/core/services/upload.service';
 
 
 const singleUpload = gql`
@@ -17,29 +18,35 @@ mutation changeFile($file: Upload!, $where: FileWhereUniqueInput!) {
 @Component({
   selector: 'app-file-change',
   template: `
-    <div class="container">
-      <div class="loading">
-        <mat-progress-bar *ngIf="loading" color="warn"></mat-progress-bar>
-      </div>
-    </div>
+
     <br />
     <div class="container" fxLayout="row" fxLayoutAlign="center center">
       <div class="item" fxFlex="50%" fxFlex.xs="98%" fxFlex.md="70%">
 
         <div class="mat-elevation-z8">
+          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="uploadService.getUploadProgress()"
+          [bufferValue]="100 - uploadService.getUploadProgress()"></mat-progress-bar>
+
           <form [formGroup]="fileUploadForm" #f="ngForm" (ngSubmit)="onUploadfile()" class="form">
             <mat-card class="file-card">
               <mat-card-header>
                 <mat-card-title>
-                  <h1>Subir Archivo</h1>
+                  <h3>Cambiar Archivo con id {{fileId}}</h3>
                 </mat-card-title>
               </mat-card-header>
 
               <mat-card-content>
 
-                <div class="full-width">
-                  <input required type="file" (change)="fileChange($event)" placeholder="File" formControlName="file">
-                </div>
+              <div class="full-width">
+                <button mat-button color="accent" mat-fab type="button" (click)="uploadFile.click()">
+                <mat-icon>attachment</mat-icon></button>
+                <input required hidden type="file" #uploadFile (change)="fileChange($event)"
+                  placeholder="File" formControlName="file">
+              </div>
+
+              <mat-list *ngIf="file">
+                <mat-list-item>{{file.name}}  {{file.size / 1024 / 1024 | number: '1.1'}} MB</mat-list-item>
+              </mat-list>
 
               </mat-card-content>
               <mat-card-actions>
@@ -69,7 +76,7 @@ mutation changeFile($file: Upload!, $where: FileWhereUniqueInput!) {
 export class FileChangeComponent implements OnInit {
 
   fileUploadForm: FormGroup;
-  file: FileList;
+  file: File;
   fileId: string;
   loading = false;
 
@@ -78,10 +85,12 @@ export class FileChangeComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private apollo: Apollo
+    private apollo: Apollo,
+    public uploadService: UploadService
   ) { }
 
   ngOnInit() {
+    this.fileId = this.activatedRoute.snapshot.params['id'];
 
     this.fileUploadForm = this.formBuilder.group({
       file: ['', Validators.required]
@@ -94,7 +103,7 @@ export class FileChangeComponent implements OnInit {
 
     if (this.fileUploadForm.valid) {
       this.fileUploadForm.disable();
-      this.fileId = this.activatedRoute.snapshot.params['id'];
+
       this.apollo.mutate({
         mutation: singleUpload,
         variables: {

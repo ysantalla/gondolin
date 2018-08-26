@@ -10,7 +10,6 @@
     "build": "npm run clean && graphql codegen && tsc",
     "clean": "rm -rf ./dist",
     "prisma": "prisma",
-    "prisma:deploy": "prisma deploy",
     "prisma:up": "docker-compose -f prisma/docker-compose.yml up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,7 +21,6 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.16.3",
     "graphql": "^0.13.2",
-    "graphql-binding": "^2.2.3",
     "graphql-import": "^0.6.0",
     "graphql-tools": "^3.1.1",
     "jsonwebtoken": "^8.3.0",
@@ -44,6 +42,7 @@
     "nodemon": "^1.18.3",
     "prisma": "^1.14.2",
     "ts-node": "^7.0.1",
+    "tslint": "^5.9.1",
     "typescript": "^3.0.1"
   }
 }

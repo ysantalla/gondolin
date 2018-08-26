@@ -4,4 +4,5 @@ export interface File {
   filename: string;
   encoding: string;
   path: string;
+  size: number;
 }

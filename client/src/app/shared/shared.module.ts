@@ -44,6 +44,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { RouterModule } from '@angular/router';
 import { ConfirmComponent } from '@app/shared/confirm/confirm.component';
 import { TreeMenuComponent } from './tree-menu/tree-menu.component';
+import { SizePipe } from '@app/shared/pipes/size.pipe';
 
 @NgModule({
   imports: [
@@ -124,9 +125,10 @@ import { TreeMenuComponent } from './tree-menu/tree-menu.component';
 
     LayoutComponent,
     ConfirmComponent,
-    TreeMenuComponent
+    TreeMenuComponent,
+    SizePipe
   ],
-  declarations: [LayoutComponent, ConfirmComponent, TreeMenuComponent],
+  declarations: [LayoutComponent, ConfirmComponent, TreeMenuComponent, SizePipe],
   providers: [
     {provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl}
   ],

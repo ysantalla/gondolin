@@ -94,6 +94,7 @@ type File implements Node {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 """A connection to a list of items."""
@@ -111,6 +112,7 @@ input FileCreateInput {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 """An edge in a connection."""
@@ -133,6 +135,8 @@ enum FileOrderByInput {
   mimetype_DESC
   encoding_ASC
   encoding_DESC
+  size_ASC
+  size_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -145,6 +149,7 @@ type FilePreviousValues {
   filename: String!
   mimetype: String!
   encoding: String!
+  size: Int!
 }
 
 type FileSubscriptionPayload {
@@ -191,6 +196,7 @@ input FileUpdateInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
 }
 
 input FileWhereInput {
@@ -402,6 +408,28 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   encoding_not_ends_with: String
+  size: Int
+
+  """All values that are not equal to given value."""
+  size_not: Int
+
+  """All values that are contained in given list."""
+  size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  size_not_in: [Int!]
+
+  """All values less than the given value."""
+  size_lt: Int
+
+  """All values less than or equal the given value."""
+  size_lte: Int
+
+  """All values greater than the given value."""
+  size_gt: Int
+
+  """All values greater than or equal the given value."""
+  size_gte: Int
 }
 
 input FileWhereUniqueInput {
@@ -1165,6 +1193,8 @@ export type FileOrderByInput =   'id_ASC' |
   'mimetype_DESC' |
   'encoding_ASC' |
   'encoding_DESC' |
+  'size_ASC' |
+  'size_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -1482,6 +1512,14 @@ export interface FileWhereInput {
   encoding_not_starts_with?: String
   encoding_ends_with?: String
   encoding_not_ends_with?: String
+  size?: Int
+  size_not?: Int
+  size_in?: Int[] | Int
+  size_not_in?: Int[] | Int
+  size_lt?: Int
+  size_lte?: Int
+  size_gt?: Int
+  size_gte?: Int
 }
 
 export interface RoleCreateInput {
@@ -1500,6 +1538,7 @@ export interface FileCreateInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
 }
 
 export interface UserSubscriptionWhereInput {
@@ -1536,6 +1575,7 @@ export interface FileUpdateInput {
   filename?: String
   mimetype?: String
   encoding?: String
+  size?: Int
 }
 
 export interface RoleWhereUniqueInput {
@@ -1557,6 +1597,7 @@ export interface FilePreviousValues {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
 }
 
 export interface BatchPayload {
@@ -1627,6 +1668,7 @@ export interface File extends Node {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
 }
 
 export interface AggregateUser {

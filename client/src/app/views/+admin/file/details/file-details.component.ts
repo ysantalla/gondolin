@@ -16,6 +16,7 @@ const fileQuery = gql`
       path
       encoding
       mimetype
+      size
     }
   }
 `;
@@ -51,6 +52,8 @@ const fileQuery = gql`
                     <mat-grid-tile><h3> {{fileData.mimetype}}</h3></mat-grid-tile>
                     <mat-grid-tile><h3>Codificación:</h3></mat-grid-tile>
                     <mat-grid-tile><h3> {{fileData.encoding}}</h3></mat-grid-tile>
+                    <mat-grid-tile><h3>Tamaño:</h3></mat-grid-tile>
+                    <mat-grid-tile><h3> {{fileData.size | size}}</h3></mat-grid-tile>
                     <mat-grid-tile><h3>Link de Descarga</h3></mat-grid-tile>
                     <mat-grid-tile>
                       <a download mat-icon-button [href]="downloadLink+'/'+fileData.id" routerLinkActive="active">

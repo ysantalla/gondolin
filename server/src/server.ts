@@ -28,15 +28,12 @@ app.get('/download/:id', async (req, res) => {
   if (file) {
     const filePath = path.join(__dirname, file.path);
     if (fs.existsSync(filePath)) {
-      res.header('Content-disposition', 'inline; filename=' + file.filename);
+      res.header('Content-disposition', 'attachament; filename=' + file.filename);
       res.header('Content-type', file.mimetype);
       res.download(filePath, file.filename); 
-    } else {
-      res.send("File not found");
-    }      
-  } else {
-    res.send("Error file not found1");
-  }    
+    }
+  }
+  res.send("Error file not found");
 });
 
 
@@ -57,7 +54,7 @@ const server = new ApolloServer({
   debug: true,
   subscriptions: {
     onConnect: (connectionParams: any, webSocket, context) => {
-      console.log(context.request.headers);
+      //console.log(context.request.headers);
 
       //webSocket.close();
 

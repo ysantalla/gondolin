@@ -1,17 +1,19 @@
 import * as bcrypt from 'bcryptjs';
 import { GraphQLResolveInfo } from 'graphql';
-import { Context } from '../../utils';
-import { ApolloError, AuthenticationError } from 'apollo-server-express';
+import { Context, getUserId } from '../../utils';
+import { ApolloError, AuthenticationError } from 'apollo-server-core';
+
 
 export const UserMutation = {
   async createUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    /*if (ctx.user) {
-      if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
-        throw new AuthenticationError('Not authorized, only ADMIN role user');
-      }
-    }*/
-    
-    
+
+    const userId = getUserId(ctx);
+
+    const authorization = await ctx.db.exists.User({id: userId, roles_some: {name: "ADMIN"}});
+
+    console.log(authorization);
+
+
     const password = await bcrypt.hash(args.data.password, 10);
     return await ctx.db.mutation.createUser(
       {
