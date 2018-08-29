@@ -70,7 +70,7 @@ const fileQuery = gql`
                 <span>Listado de files</span>
               </button>
               <button *ngIf="fileData" mat-raised-button
-                    color="primary" [routerLink]="['/admin','file', 'update', fileData.id]" routerLinkActive="active">
+                    color="primary" [routerLink]="['/admin','file', 'change', fileData.id]" routerLinkActive="active">
                 <mat-icon>mode_edit</mat-icon>
                 <span>Editar</span>
               </button>

@@ -3,9 +3,10 @@ import * as mkdirp from 'mkdirp';
 import * as shortid from 'shortid';
 import * as path from 'path';
 
-import { ApolloError, AuthenticationError } from 'apollo-server-core';
+import { AuthenticationError } from 'apollo-server-core';
 import * as jwt from 'jsonwebtoken';
 import { Prisma } from './generated/prisma';
+
 
 export interface Context {
   db: Prisma;
@@ -15,10 +16,11 @@ export interface Context {
 
 export function getUserId(ctx: Context) {
   const Authorization = ctx.req.get('Authorization');
+
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '');
     const tokenDecoded: any = jwt.verify(token, process.env.APP_SECRET);
-    return tokenDecoded.id;
+    return tokenDecoded.user.id;
   }
 
   throw new AuthenticationError('Not valid token');
@@ -54,6 +56,7 @@ export async function removeFS(filepath: string): Promise<any> {
       } catch (err) {
         resolve(false);
       }
+      reject('Error');
   });
 }
 

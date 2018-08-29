@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { Context, processUpload, removeFS } from '../../utils';
-import { ApolloError, AuthenticationError } from 'apollo-server-express';
+import { ApolloError } from 'apollo-server-express';
 
 
 export const FileMutation = {

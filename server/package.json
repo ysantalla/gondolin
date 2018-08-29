@@ -1,7 +1,7 @@
 {
   "name": "server",
-  "version": "0.1.0",
-  "description": "Apollo Server and Prisma DAL applications",
+  "version": "1.0.0",
+  "description": "Apollo Server + Prisma ORM-like Layer",
   "main": "dist/server.js",
   "scripts": {
     "start": "npm run build && dotenv -- node dist/server.js",
@@ -21,7 +21,10 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.16.3",
     "graphql": "^0.13.2",
+    "graphql-binding": "^2.2.4",
     "graphql-import": "^0.6.0",
+    "graphql-middleware": "^1.6.6",
+    "graphql-shield": "^3.0.1",
     "graphql-tools": "^3.1.1",
     "jsonwebtoken": "^8.3.0",
     "mkdirp": "0.5.1",

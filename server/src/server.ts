@@ -5,14 +5,23 @@ import * as fs from 'fs';
 import { createServer } from 'http';
 import { MemcachedCache } from 'apollo-server-cache-memcached';
 
+import { applyMiddleware } from 'graphql-middleware'
+
 import { Prisma } from './generated/prisma';
 import { resolvers } from './resolvers';
 import { typeDefs } from './schemas';
+
+import { authMiddleware } from './permissions';
 
 const schema = makeExecutableSchema({
   typeDefs: typeDefs,
   resolvers: resolvers
 })
+
+const schemaWithMiddleware = applyMiddleware(
+  schema,
+  authMiddleware  
+)
 
 const app = express();
 
@@ -25,21 +34,25 @@ const db = new Prisma({
 app.get('/download/:id', async (req, res) => {
   const file = await db.query.file({where: {id: req.params.id}});
 
-  if (file) {
-    const filePath = path.join(__dirname, file.path);
-    if (fs.existsSync(filePath)) {
-      res.header('Content-disposition', 'attachament; filename=' + file.filename);
-      res.header('Content-type', file.mimetype);
-      res.download(filePath, file.filename); 
-    }
+  const filePath = path.join(__dirname, file.path);
+  if (fs.existsSync(filePath)) {
+    res.header('Content-disposition', 'attachament; filename=' + file.filename);
+    res.header('Content-type', file.mimetype);
+    res.download(filePath, file.filename); 
   }
+
   res.send("Error file not found");
 });
 
 
 const server = new ApolloServer({
-  schema: schema,
-  context: async ({ req, res }) => {
+  schema: schemaWithMiddleware,
+  context: async ({ req, res, connection }) => {    
+
+    if (connection) {
+      console.log('yasmany ');
+      console.log(connection);
+    }
     
     return {
       req,
@@ -54,14 +67,15 @@ const server = new ApolloServer({
   debug: true,
   subscriptions: {
     onConnect: (connectionParams: any, webSocket, context) => {
-      //console.log(context.request.headers);
+      console.log('Ws connect!!!');
 
-      //webSocket.close();
-
-      console.log(connectionParams.authToken);
+      if (connectionParams.authToken) {
+        return {token: connectionParams.authToken};
+      }
+      throw new Error('Missing auth token!');      
     },
     onDisconnect: (webSocket, context) => {
-      console.log('disconnet');
+      console.log('Ws disconnet!!!');
     },
     path: '/subscriptions'
   }

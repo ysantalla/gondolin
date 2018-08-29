@@ -97,8 +97,6 @@ export const AuthMutation = {
       throw new ApolloError('Invalid password');
     }
 
-    console.log("yasmany");
-
     return {
       token: jwt.sign(
         {

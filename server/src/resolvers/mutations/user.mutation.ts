@@ -1,18 +1,11 @@
 import * as bcrypt from 'bcryptjs';
 import { GraphQLResolveInfo } from 'graphql';
 import { Context, getUserId } from '../../utils';
-import { ApolloError, AuthenticationError } from 'apollo-server-core';
+import { ApolloError } from 'apollo-server-core';
 
 
 export const UserMutation = {
   async createUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-
-    const userId = getUserId(ctx);
-
-    const authorization = await ctx.db.exists.User({id: userId, roles_some: {name: "ADMIN"}});
-
-    console.log(authorization);
-
 
     const password = await bcrypt.hash(args.data.password, 10);
     return await ctx.db.mutation.createUser(
@@ -27,9 +20,7 @@ export const UserMutation = {
   },
 
   async updateUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
-      throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }*/
+
     const userExist = await ctx.db.exists.User({
       id: args.where.id
     });
@@ -55,10 +46,7 @@ export const UserMutation = {
   },
 
   async deleteUser(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
-      throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }*/
-
+    
     const userExist = await ctx.db.exists.User({
       id: args.where.id});
 
@@ -75,9 +63,7 @@ export const UserMutation = {
   },
 
   async deleteManyUsers(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
-    /*if (!ctx.user.roles.find(role => role.name == 'ADMIN')) {
-      throw new AuthenticationError('Not authorized, only ADMIN role user');
-    }*/
+    
     return await ctx.db.mutation.deleteManyUsers({
       where: {...args.where}
     },
