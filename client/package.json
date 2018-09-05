@@ -25,12 +25,10 @@
     "@angular/router": "^6.1.4",
     "apollo-angular": "^1.2.0",
     "apollo-angular-link-http": "^1.2.0",
-    "apollo-angular-link-persisted": "^1.0.0",
     "apollo-cache-inmemory": "^1.2.8",
     "apollo-client": "^2.4.0",
     "apollo-link": "^1.2.2",
     "apollo-link-error": "^1.1.0",
-    "apollo-link-state": "^0.4.1",
     "apollo-link-ws": "^1.0.8",
     "apollo-utilities": "^1.0.19",
     "chart.js": "^2.7.2",
@@ -62,6 +60,6 @@
     "protractor": "~5.3.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
-    "typescript": "~2.7.2"
+    "typescript": "~2.9.2"
   }
 }

@@ -44,6 +44,10 @@ export class AuthService {
     return this.tokenGetter;
   }
 
+  public getTokenAsync(): Promise<string> {
+    return this._token.toPromise();
+  }
+
   public getRoles(): Role[] {
     return this._roles.value;
   }

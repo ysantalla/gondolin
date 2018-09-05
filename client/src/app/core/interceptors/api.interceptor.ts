@@ -3,16 +3,13 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpHandler,
-  HttpRequest,
-  HttpResponse,
-  HttpEventType,
-  HttpProgressEvent
+  HttpRequest
 } from '@angular/common/http';
 
 import { extractFiles } from 'extract-files';
 
 import { Observable } from 'rxjs';
-import { map, tap, last, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { UploadService } from '@app/core/services/upload.service';
 
 
@@ -28,7 +25,7 @@ export class ApiInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
 
-    // Support to Upload Files
+    // Support to Upload Files and progress
     const files = extractFiles(req.body);
 
     if (files.length) {
@@ -62,7 +59,7 @@ export class ApiInterceptor implements HttpInterceptor {
 
       return next.handle(newReq).pipe(
         map((event: any) => {
-          this.uploadService.setUploadPercent(event);
+          this.uploadService.setPercent(event);
           return event;
         })
       );

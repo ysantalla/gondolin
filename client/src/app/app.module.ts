@@ -38,7 +38,7 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: './views/+home/home.module#HomeModule',
-    canLoad: [AuthGuard]
+    //canLoad: [AuthGuard]
   },
   {
     path: 'error',

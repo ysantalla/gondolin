@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadService {
 
-  uploadProgress = 0;
+  private _percent = new BehaviorSubject(0);
 
   constructor() {}
 
-  public setUploadPercent(event: HttpEvent<any>): void {
+  public setPercent(event: HttpEvent<any>): void {
+
     switch (event.type) {
+      case HttpEventType.Sent:
+        this._percent.next(0);
+        break;
       case HttpEventType.UploadProgress:
-        this.uploadProgress = Math.round((100 * event.loaded) / event.total);
+        this._percent.next(Math.round((100 * event.loaded) / event.total));
         break;
       default:
-        this.uploadProgress = 0;
+        this._percent.next(0);
     }
   }
 
-  public getUploadProgress(): number {
-    return this.uploadProgress;
+  public getPercent(): Observable<number> {
+    return this._percent;
   }
 }

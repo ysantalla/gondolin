@@ -4,17 +4,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { IndexComponent } from './index/index.component';
+import { RoleGuard } from '@app/core/guard/role.guard';
+import { CountUsersComponent } from './count-users/count-users.component';
+import { CountFilesComponent } from './count-files/count-files.component';
+import { CountRolesComponent } from './count-roles/count-roles.component';
 
 const routes: Routes = [
   {
     path: '',
     component: IndexComponent,
-    data: {title: 'Escritorio'}
-  },
-  {
-    path: 'dashboard',
-    component: IndexComponent,
-    data: {title: 'Escritorio'}
+    data: {title: 'Escritorio', expectedRole: 'ADMIN'},
+    canActivate: [RoleGuard]
   }
 ];
 
@@ -24,6 +24,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [IndexComponent]
+  declarations: [IndexComponent, CountUsersComponent, CountFilesComponent, CountRolesComponent]
 })
 export class DashboardModule { }

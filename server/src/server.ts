@@ -51,7 +51,7 @@ const server = new ApolloServer({
 
     if (connection) {
       console.log('yasmany ');
-      console.log(connection);
+      console.log(connection.context);
     }
     
     return {
@@ -72,7 +72,9 @@ const server = new ApolloServer({
       if (connectionParams.authToken) {
         return {token: connectionParams.authToken};
       }
-      throw new Error('Missing auth token!');      
+
+      console.log(connectionParams);
+      //throw new Error('Missing auth token!');      
     },
     onDisconnect: (webSocket, context) => {
       console.log('Ws disconnet!!!');

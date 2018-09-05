@@ -24,8 +24,8 @@ mutation changeFile($file: Upload!, $where: FileWhereUniqueInput!) {
       <div class="item" fxFlex="50%" fxFlex.xs="98%" fxFlex.md="70%">
 
         <div class="mat-elevation-z8">
-          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="uploadService.getUploadProgress()"
-          [bufferValue]="100 - uploadService.getUploadProgress()"></mat-progress-bar>
+          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="percent"
+          [bufferValue]="100 - percent"></mat-progress-bar>
 
           <form [formGroup]="fileUploadForm" #f="ngForm" (ngSubmit)="onUploadfile()" class="form">
             <mat-card class="file-card">
@@ -34,7 +34,6 @@ mutation changeFile($file: Upload!, $where: FileWhereUniqueInput!) {
                   <h3>Cambiar Archivo con id {{fileId}}</h3>
                 </mat-card-title>
               </mat-card-header>
-
               <mat-card-content>
 
               <div class="full-width">
@@ -80,6 +79,8 @@ export class FileChangeComponent implements OnInit {
   fileId: string;
   loading = false;
 
+  percent: number;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -94,6 +95,10 @@ export class FileChangeComponent implements OnInit {
 
     this.fileUploadForm = this.formBuilder.group({
       file: ['', Validators.required]
+    });
+
+    this.uploadService.getPercent().subscribe(data => {
+      this.percent = data;
     });
   }
 

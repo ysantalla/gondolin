@@ -31,7 +31,6 @@ const fileList = gql`
       mimetype
       path
       size
-      encoding
     }
   }
 `;
@@ -116,20 +115,14 @@ const deleteManyFiles = gql`
 
                 <!-- Mimetype Column -->
                 <ng-container matColumnDef="mimetype">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
-                  <mat-cell *matCellDef="let row">{{row.mimetype}}</mat-cell>
-                </ng-container>
-
-                <!-- Encoding Column -->
-                <ng-container matColumnDef="encoding">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Codificación</mat-header-cell>
-                  <mat-cell *matCellDef="let row">{{row.encoding}}</mat-cell>
+                  <mat-header-cell fxFlex="10" *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
+                  <mat-cell fxFlex="10" *matCellDef="let row">{{row.mimetype}}</mat-cell>
                 </ng-container>
 
                 <!-- Size Column -->
                 <ng-container matColumnDef="size">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño</mat-header-cell>
-                  <mat-cell *matCellDef="let row">{{row.size | size}}</mat-cell>
+                  <mat-header-cell fxFlex="10" *matHeaderCellDef mat-sort-header>Tamaño</mat-header-cell>
+                  <mat-cell fxFlex="10" *matCellDef="let row">{{row.size | size}}</mat-cell>
                 </ng-container>
 
                 <!-- Download Column -->
@@ -220,7 +213,7 @@ export class FileListComponent implements OnInit, AfterViewInit, OnDestroy {
   selection = new SelectionModel<File>(true, []);
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['select', 'filename', 'mimetype', 'encoding', 'size', 'download', 'details', 'edit', 'delete'];
+  displayedColumns = ['select', 'filename', 'mimetype', 'size', 'download', 'details', 'edit', 'delete'];
 
   loading: boolean;
   downloadLink: string = env.downloadLinkServer;

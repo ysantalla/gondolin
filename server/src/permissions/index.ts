@@ -11,6 +11,9 @@ export const authMiddleware = shield({
     role: rules.isAdmin,
     files: rules.isAdmin,
     file: rules.isAdmin,
+    rolesConnection: rules.isAdmin,
+    filesConnection: rules.isAdmin,
+    usersConnection: rules.isAdmin,
   },
   Mutation: {
     createUser: rules.isAdmin,

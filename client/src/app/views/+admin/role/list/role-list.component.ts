@@ -111,7 +111,7 @@ const deleteManyRoles = gql`
 
                 <!-- Description Column -->
                 <ng-container matColumnDef="description">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>descripción</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</mat-header-cell>
                   <mat-cell *matCellDef="let row">{{row.description}}</mat-cell>
                 </ng-container>
 

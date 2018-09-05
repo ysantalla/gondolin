@@ -8,5 +8,8 @@ export const FileQuery = {
   },
   async file(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {    
     return ctx.db.query.file({where: { id: args.id }}, info);
+  },
+  async filesConnection(parent: any, args: any, ctx: Context, info: GraphQLResolveInfo) {
+    return ctx.db.query.filesConnection({...args}, info);
   }
 }

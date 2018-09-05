@@ -150,7 +150,7 @@ export class SignupComponent implements OnInit {
         this.loading = false;
         this.authService.register(data.signup);
         this.snackBar.open(`Bienvenido ${data.signup.user.firstname}`, 'X', {duration: 3000});
-        this.router.navigate(['home']);
+        this.router.navigate(['dashboard']);
       }, (error) => {
         this.signupForm.enable();
         this.loading = false;

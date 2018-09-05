@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@app/core/services/auth.service';
@@ -7,25 +7,29 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { routerTransition } from '@app/core/animations/router.transition';
-
 import { environment as env } from '@env/environment';
 
 @Component({
   selector: 'app-layout',
   template: `
-    <mat-sidenav-container class="sidenav-container" autosize>
+    <mat-sidenav-container class="sidenav-container">
       <mat-sidenav
         #drawer
         class="sidenav"
         fixedInViewport="false"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="!(isHandset$ | async)">
+        [opened]="!(isHandset$ | async) && (isLoggedIn | async)">
         <mat-toolbar class="shadow-navbar" color="primary">
           <img class="logo" src="assets/icono.svg" />
           <span *ngIf="!(isHandset$ | async)">{{appName}}</span>
         </mat-toolbar>
         <mat-nav-list>
+          <a class="menu" *ngIf="(isAdmin | async)"
+                mat-list-item routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon aria-label="dashboard">dashboard</mat-icon>
+            <span>Escritorio</span>
+          </a>
           <a class="menu" *ngIf="(isAdmin | async)"
                 mat-list-item routerLink="/admin/user" routerLinkActive="active">
             <mat-icon aria-label="users">person</mat-icon>
@@ -42,10 +46,10 @@ import { environment as env } from '@env/environment';
             <span>Gestión de Archivos</span>
           </a>
 
-          <a class="menu" *ngIf="(isAdmin | async)"
+          <a class="menu"
                 mat-list-item routerLink="/home/home" routerLinkActive="active">
             <mat-icon aria-label="files">folder</mat-icon>
-            <span>Gestión de Archivos</span>
+            <span>home</span>
           </a>
 
           <!--<app-tree-menu></app-tree-menu>-->
@@ -104,11 +108,8 @@ import { environment as env } from '@env/environment';
         </mat-toolbar>
 
         <div class="layout">
-          <div>
-            <div class="item" [@routerTransition]="o.isActivated && o.activatedRoute.routeConfig.path"
-            >
-              <router-outlet #o="outlet"></router-outlet>
-            </div>
+          <div class="item" [@routerTransition]="o.isActivated && o.activatedRoute.routeConfig.path">
+            <router-outlet #o="outlet"></router-outlet>
           </div>
         </div>
 

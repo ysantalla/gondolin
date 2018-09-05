@@ -3,18 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+
 import gql from 'graphql-tag';
-import { validate } from 'graphql';
+
 import { UploadService } from '@app/core/services/upload.service';
-
-
-const singleUpload = gql`
-mutation uploadFile($file: Upload!) {
-  uploadFile(file: $file) {
-    filename
-  }
-}
-`;
+import { BehaviorSubject } from 'rxjs';
 
 const multipleUploads = gql`
 mutation uploadFiles($files: [Upload!]!) {
@@ -33,8 +26,8 @@ mutation uploadFiles($files: [Upload!]!) {
       <div class="item" fxFlex="50%" fxFlex.xs="98%" fxFlex.md="70%">
 
         <div class="mat-elevation-z8">
-          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="uploadService.getUploadProgress()"
-              [bufferValue]="100 - uploadService.getUploadProgress()"></mat-progress-bar>
+          <mat-progress-bar *ngIf="loading" color="primary" mode="buffer" [value]="percent"
+              [bufferValue]="100 - percent"></mat-progress-bar>
 
           <form [formGroup]="fileUploadForm" #f="ngForm" (ngSubmit)="onUploadfile()" class="form">
             <mat-card class="file-card">
@@ -66,7 +59,7 @@ mutation uploadFiles($files: [Upload!]!) {
 
                 <button mat-raised-button color="accent" routerLink="/admin/file" routerLinkActive type="button" aria-label="filesList">
                   <mat-icon>list</mat-icon>
-                  <span>Listado de files</span>
+                  <span>Listado de Archivos</span>
                 </button>
               </mat-card-actions>
             </mat-card>
@@ -88,6 +81,8 @@ export class FileUploadComponent implements OnInit {
   files: FileList;
   loading = false;
 
+  percent: number;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -100,6 +95,10 @@ export class FileUploadComponent implements OnInit {
 
     this.fileUploadForm = this.formBuilder.group({
       files: ['', Validators.required]
+    });
+
+    this.uploadService.getPercent().subscribe(data => {
+      this.percent = data;
     });
   }
 

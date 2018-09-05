@@ -69,7 +69,9 @@ const meQuery = gql`
                   <span>Pérfil</span>
                 </button>
 
-                <button mat-raised-button color="accent" type="button" routerLink="/dasboard" routerLinkActive aria-label="dashboard">
+                <button mat-raised-button color="accent" type="button"
+                   routerLink="/dashboard" routerLinkActive="active"
+                   aria-label="dashboard">
                   <mat-icon>home</mat-icon>
                   <span>Escritorio</span>
                 </button>

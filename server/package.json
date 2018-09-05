@@ -4,7 +4,7 @@
   "description": "Apollo Server + Prisma ORM-like Layer",
   "main": "dist/server.js",
   "scripts": {
-    "start": "npm run build && dotenv -- node dist/server.js",
+    "start": "npm run build && dotenv -e .env.prod -- node dist/server.js",
     "dev": "dotenv -- nodemon -e ts,graphql -x ts-node src/server.ts",
     "debug": "dotenv -- nodemon -e ts,graphql -x ts-node --inspect src/server.ts",
     "build": "npm run clean && graphql codegen && tsc",

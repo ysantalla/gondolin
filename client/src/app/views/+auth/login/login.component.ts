@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
         if (data) {
           this.authService.login(data.login);
           this.snackBar.open(`Bienvenido ${data.login.user.firstname}`, 'X', {duration: 3000});
-          this.router.navigate(['dashboard', '']);
+          this.router.navigate(['dashboard']);
         } else {
           this.snackBar.open(`Error no hay datos`, 'X', {duration: 3000});
         }

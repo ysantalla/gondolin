@@ -16,6 +16,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { AuthGuard } from '@app/core/guard/auth.guard';
 import { RoleGuard } from '@app/core/guard/role.guard';
 import { ApiInterceptor } from '@app/core/interceptors/api.interceptor';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 
 @NgModule({
@@ -35,6 +36,8 @@ import { ApiInterceptor } from '@app/core/interceptors/api.interceptor';
 })
 export class CoreModule {
 
+  public subscriptionClient: SubscriptionClient = null;
+
   constructor(
     @Optional()
     @SkipSelf()
@@ -50,7 +53,6 @@ export class CoreModule {
     const http = httpLink.create({
       uri: env.httpLinkServer,
     });
-
 
     const auth_middleware = new ApolloLink((operation, forward) => {
       operation.setContext({
@@ -73,14 +75,22 @@ export class CoreModule {
 
     const http_link = auth_middleware.concat(error_link.concat(http));
 
+    const subscriptionMiddleware = {
+      applyMiddleware: async (options, next) => {
+        options.authToken = await this.authService.getTokenAsync();
+        next();
+      },
+    };
+
     // Create a WebSocket link:
     const subscriptionLink = new WebSocketLink({
       uri: env.wsLinkServer,
+      applyMiddlewares: [subscriptionMiddleware],
       options: {
         reconnect: true,
         timeout: 20000,
         connectionParams: {
-          authToken: this.authService.getToken() || null
+          authToken: this.authService.getToken()
         }
       }
     });
@@ -112,8 +122,10 @@ export class CoreModule {
         mutate: {
           errorPolicy: 'none',
         },
-      }
+      },
     });
+
+    //this.apollo.use([subscriptionMiddleware]);
 
   }
 }

@@ -8,7 +8,9 @@ const USER_SUBSCRIPTION = gql`
   subscription userSubscription {
     userSubscription {
       node {
-        firstname
+        user{
+          firstname
+        }
       }
     }
   }
@@ -74,6 +76,8 @@ export class HomeComponent implements OnInit {
         if (!subscriptionData.data) {
           return prev;
         }
+
+        console.log('yas');
 
         const newUserItem = subscriptionData.data.userSubscription;
         return Object.assign({}, prev, {

@@ -1,8 +1,8 @@
 # import DateTime, BatchPayload from "../generated/prisma.graphql"
 
-# import UserCreateInput, UserUpdateInput, UserWhereUniqueInput, UserWhereInput, UserOrderByInput, UserSubscriptionPayload from "../generated/prisma.graphql"
-# import Role, RoleCreateInput, RoleUpdateInput, RoleWhereUniqueInput, RoleSubscriptionPayload from "../generated/prisma.graphql"
-# import File, FileCreateInput, FileUpdateInput, FileWhereUniqueInput, FileSubscriptionPayload from "../generated/prisma.graphql"
+# import UserCreateInput, UserUpdateInput, UserWhereUniqueInput, UserWhereInput, UserOrderByInput, UserConnection, UserSubscriptionPayload from "../generated/prisma.graphql"
+# import Role, RoleCreateInput, RoleUpdateInput, RoleWhereUniqueInput, RoleConnection ,RoleSubscriptionPayload from "../generated/prisma.graphql"
+# import File, FileCreateInput, FileUpdateInput, FileWhereUniqueInput, FileConnection, FileSubscriptionPayload from "../generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -62,6 +62,9 @@ type Query {
     first: Int
     last: Int
   ): [File!]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
+  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
 }
 
 scalar Upload
